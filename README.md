@@ -11,3 +11,4 @@ https://docs.google.com/spreadsheets/d/1vQ2_fw5t503U9C0Xk4xNmy8qYqmvff7LRdGxiP1y
 
 ## Other performance benchmark
 * [Java Collection Performance](http://java.dzone.com/articles/java-collection-performance)
+* [Dynamic Array](http://en.wikipedia.org/wiki/Dynamic_array)
