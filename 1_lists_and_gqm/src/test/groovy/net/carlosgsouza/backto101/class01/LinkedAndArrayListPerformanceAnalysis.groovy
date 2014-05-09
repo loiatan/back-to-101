@@ -63,4 +63,66 @@ public class LinkedAndArrayListPerformanceAnalysis extends Specification {
 		and: "answer the question"
 		linkedListMeasurements[MEASUREMENTS] < arrayListMeasurements[MEASUREMENTS]
 	}
+	
+	def "Is it faster to sort elements in ArrayList?"() {
+		given: "A linked and an array list"
+		List<Integer> linkedList
+		List<Integer> arrayList
+		
+		and: "the test parameters"
+		int ROUNDS = 10
+		int MEASUREMENTS = 100
+		int LIST_SIZE = 100000
+		
+		and: "arrays to store the measurements"
+		int[] linkedListMeasurements = new int[MEASUREMENTS + 1]
+		int[] arrayListMeasurements = new int[MEASUREMENTS + 1]
+		
+		when: "measuring the performance of a linked list"
+		ROUNDS.times {
+			long start = System.currentTimeMillis()
+			
+			linkedList = new LinkedList<Integer>()
+
+			LIST_SIZE.times{i->
+				linkedList.add(i)
+			}
+						
+			MEASUREMENTS.times { i ->
+				linkedListMeasurements[i] += System.currentTimeMillis() - start
+				linkedList.sort()
+			}
+			linkedListMeasurements[MEASUREMENTS] += System.currentTimeMillis() - start
+		}
+		
+		and: "measuring the performance of an array list"
+		ROUNDS.times {
+			long start = System.currentTimeMillis()
+			
+			arrayList = new ArrayList<Integer>()
+			
+			LIST_SIZE.times{i->
+				arrayList.add(i)
+			}
+			
+			MEASUREMENTS.times { i ->
+				arrayListMeasurements[i] += System.currentTimeMillis() - start
+				arrayList.sort()
+			}
+			arrayListMeasurements[MEASUREMENTS] += System.currentTimeMillis() - start
+		}
+		
+		then: "print the results"
+		
+		println "List_Size\tLinked\tArray"
+		(MEASUREMENTS + 1).times {
+			def linkedListTime = linkedListMeasurements[it] / ROUNDS
+			def arrayListTime = arrayListMeasurements[it] / ROUNDS
+			
+			println "$LIST_SIZE\t$linkedListTime\t$arrayListTime"
+		}
+		
+		and: "answer the question"
+		linkedListMeasurements[MEASUREMENTS] < arrayListMeasurements[MEASUREMENTS]
+	}
 }
