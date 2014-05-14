@@ -68,31 +68,35 @@ public class LinkedAndArrayListPerformanceAnalysis extends Specification {
 		given: "A linked and an array list"
 		List<Integer> linkedList
 		List<Integer> arrayList
+		Random random = new Random()
 		
 		and: "the test parameters"
 		int ROUNDS = 10
 		int MEASUREMENTS = 100
-		int LIST_SIZE = 100000
+		int LIST_SIZE = 1000
 		
 		and: "arrays to store the measurements"
 		int[] linkedListMeasurements = new int[MEASUREMENTS + 1]
 		int[] arrayListMeasurements = new int[MEASUREMENTS + 1]
 		
 		when: "measuring the performance of a linked list"
-		ROUNDS.times {
+		ROUNDS.times {round->
 			long start = System.currentTimeMillis()
 			
 			linkedList = new LinkedList<Integer>()
 
 			LIST_SIZE.times{i->
-				linkedList.add(i)
+				linkedList.add(random.nextInt(100000+1))
 			}
-						
+			//println "unsorted list: $linkedList"
+			//println "ROUND\tMEASUREMENT\tLinkedListResult"
 			MEASUREMENTS.times { i ->
 				linkedListMeasurements[i] += System.currentTimeMillis() - start
 				linkedList.sort()
+				///println "$round\t$i\t$linkedListMeasurements[i]"
 			}
 			linkedListMeasurements[MEASUREMENTS] += System.currentTimeMillis() - start
+			//println "Sorted list: $linkedList"
 		}
 		
 		and: "measuring the performance of an array list"
@@ -102,27 +106,28 @@ public class LinkedAndArrayListPerformanceAnalysis extends Specification {
 			arrayList = new ArrayList<Integer>()
 			
 			LIST_SIZE.times{i->
-				arrayList.add(i)
+				arrayList.add(random.nextInt(100000+1))
 			}
-			
+			//println "unsorted arraylist: $arrayList"
 			MEASUREMENTS.times { i ->
 				arrayListMeasurements[i] += System.currentTimeMillis() - start
 				arrayList.sort()
 			}
 			arrayListMeasurements[MEASUREMENTS] += System.currentTimeMillis() - start
+			//println "Sorted arraylist: $linkedList"
 		}
 		
 		then: "print the results"
 		
-		println "List_Size\tLinked\tArray"
+		println "Measurement\tLinked\tArray"
 		(MEASUREMENTS + 1).times {
 			def linkedListTime = linkedListMeasurements[it] / ROUNDS
 			def arrayListTime = arrayListMeasurements[it] / ROUNDS
 			
-			println "$LIST_SIZE\t$linkedListTime\t$arrayListTime"
+			println "$it\t$linkedListTime\t$arrayListTime"
 		}
 		
 		and: "answer the question"
-		linkedListMeasurements[MEASUREMENTS] < arrayListMeasurements[MEASUREMENTS]
+		linkedListMeasurements[MEASUREMENTS] > arrayListMeasurements[MEASUREMENTS]
 	}
 }
